@@ -1,0 +1,73 @@
+/* General property card container */
+.property-card {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 15px;
+    width: 300px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+}
+
+/* Hover effect for the card */
+.property-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Title styling */
+.property-card h2 {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Description and details */
+.property-card .property-description {
+    color: #666;
+    font-size: 0.95em;
+    line-height: 1.6;
+}
+
+/* Individual property details */
+.property-card .property-description p {
+    margin: 5px 0;
+}
+
+/* Price styling */
+.property-card .property-price {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #007bff;
+}
+
+/* Book Now button */
+.property-card button {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* Hover effect for button */
+.property-card button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .property-card {
+        width: 100%;
+        margin: 10px 0;
+    }
+}

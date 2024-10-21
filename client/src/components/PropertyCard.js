@@ -1,17 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import './PropertyCard.css';
 
 function PropertyCard({ property }) {
     const navigate = useNavigate();
 
     const handleBooking = () => {
         // Redirect to the buyer sign-up form
-        navigate('/buyersignup');
+        navigate('/Login');
     };
 
     return (
         <div className="property-card">
-            <img src={property.imagel} alt= 'Loading...' className='property-image' />
+           
             <h2>{property.title}</h2>
 
             <div className='property description'>

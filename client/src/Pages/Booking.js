@@ -6,9 +6,9 @@ function MyBookings({ buyerId }) {
     const [selectedBooking, setSelectedBooking] = useState(null);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:5555/bookings/${buyerId}`)
+        fetch(`http://127.0.0.1:5555/bookings`)
             .then(response => response.json())
-            .then(data => setBookings(data))
+            .then(data => setBookings(data.filter(booking => booking.buyer_id === buyerId)))
             .catch(error => console.error(error));
     }, [buyerId]);
 
@@ -27,8 +27,24 @@ function MyBookings({ buyerId }) {
             .catch(error => console.error(error));
     };
 
-    const handleEdit = (booking) => {
-        setSelectedBooking(booking);
+    const handleCreateBooking = (propertyId, bookingDate) => {
+        fetch(`http://127.0.0.1:5555/bookings`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                buyer_id: buyerId,
+                property_id: propertyId,
+                booking_date: bookingDate
+            }),
+        })
+            .then(response => response.json())
+            .then(newBooking => {
+                setBookings([...bookings, newBooking]);
+                alert('Booking created successfully!');
+            })
+            .catch(error => console.error('Error creating booking:', error));
     };
 
     const handleCancelEdit = () => {
@@ -43,6 +59,7 @@ function MyBookings({ buyerId }) {
                 selectedBooking={selectedBooking}
                 setBookings={setBookings}
                 handleCancelEdit={handleCancelEdit}
+                handleCreateBooking={handleCreateBooking} // Pass the create function to BookingForm
             />
 
             <ul>
@@ -51,7 +68,6 @@ function MyBookings({ buyerId }) {
                         <li key={booking.id}>
                             <p>Property ID: {booking.property_id}</p>
                             <p>Booking Date: {booking.booking_date}</p>
-                            <button onClick={() => handleEdit(booking)}>Edit</button>
                             <button onClick={() => handleDelete(booking.id)}>Delete Booking</button>
                         </li>
                     ))

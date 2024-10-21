@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropertyCard from '../components/PropertyCard';
 import NavBar from '../components/NavBar';
-import './Properties.css'; // Ensure you have a separate CSS file for styles
+import './Properties.css'; 
 
 function Properties() {
     const [properties, setProperties] = useState([]);
@@ -19,8 +19,7 @@ function Properties() {
         description: '',
         location: '',
         price: '',
-        agent_id: '',
-        image: ''
+        agent_id: ''
     });
 
     useEffect(() => {
@@ -88,7 +87,6 @@ function Properties() {
             location: property.location,
             price: property.price,
             agent_id: property.agent_id,
-            image: property.image
         });
     };
 
@@ -123,7 +121,7 @@ function Properties() {
 
     const resetForm = () => {
         setIsEditing(false);
-        setNewProperty({ title: '', description: '', location: '', price: '', agent_id: '', image: '' });
+        setNewProperty({ title: '', description: '', location: '', price: '', agent_id: ''});
         setCurrentProperty(null);
     };
 
@@ -213,14 +211,7 @@ function Properties() {
                     onChange={handleNewPropertyChange} 
                     className="form-input" 
                 />
-                <input 
-                    type="text" 
-                    name="image" 
-                    placeholder="Image URL" 
-                    value={newProperty.image} 
-                    onChange={handleNewPropertyChange} 
-                    className="form-input" 
-                />
+              
                 {isEditing ? (
                     <button onClick={updateProperty} className="form-button">Update Property</button>
                 ) : (
@@ -234,7 +225,6 @@ function Properties() {
                 {filteredProperties.map(property => (
                     <li key={property.id} className="property-item">
                         <PropertyCard property={property} />
-                        <img src={property.image} alt={property.title} className="property-image" />
                         <div className="property-actions">
                             <button onClick={() => editProperty(property)} className="action-button">Edit</button>
                             <button onClick={() => deleteProperty(property.id)} className="action-button">Delete</button>
