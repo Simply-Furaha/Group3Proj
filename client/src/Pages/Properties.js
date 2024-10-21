@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropertyCard from '../components/PropertyCard';
 import NavBar from '../components/NavBar';
-import './Properties.css'; // Ensure you have a separate CSS file for styles
+import './Properties.css'; 
 
 function Properties() {
     const [properties, setProperties] = useState([]);
