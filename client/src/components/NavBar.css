@@ -1,0 +1,68 @@
+/* Base styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar container */
+.navbar {
+    background-color: #333;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 30px;
+}
+.navbar #auth{
+    display: flex;
+    gap: 20px;
+    align-items: end;
+}
+
+/* Navbar list styles */
+.navbar-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+/* Individual navbar links */
+.navbar-list li {
+    position: relative;
+}
+
+.navbar-list a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.1em;
+    padding: 10px 15px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+    border-radius: 5px;
+}
+
+/* Hover effect for links */
+.navbar-list a:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* Active state for links */
+.navbar-list a.active {
+    background-color: #0056b3;
+    color: #fff;
+}
+
+/* Responsive navbar */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 10px 15px;
+    }
+
+    .navbar-list {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
