@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropertyCard from '../components/PropertyCard';
-import NavBar from '../components/NavBar'
+import NavBar from '../components/NavBar';
+import './Properties.css'; // Ensure you have a separate CSS file for styles
+
 function Properties() {
     const [properties, setProperties] = useState([]);
     const [filteredProperties, setFilteredProperties] = useState([]);
@@ -10,8 +12,22 @@ function Properties() {
         minPrice: '',
         maxPrice: ''
     });
+    const [isEditing, setIsEditing] = useState(false);
+    const [currentProperty, setCurrentProperty] = useState(null);
+    const [newProperty, setNewProperty] = useState({
+        title: '',
+        description: '',
+        location: '',
+        price: '',
+        agent_id: '',
+        image: ''
+    });
 
     useEffect(() => {
+        fetchProperties();
+    }, []);
+
+    const fetchProperties = () => {
         fetch("http://127.0.0.1:5555/properties")
             .then(response => response.json())
             .then(data => {
@@ -19,7 +35,7 @@ function Properties() {
                 setFilteredProperties(data);
             })
             .catch(error => console.error("Error fetching properties:", error));
-    }, []);
+    };
 
     const handleSearch = () => {
         const { agent, location, minPrice, maxPrice } = searchParams;
@@ -39,46 +55,191 @@ function Properties() {
         setSearchParams(prev => ({ ...prev, [name]: value }));
     };
 
+    const handleNewPropertyChange = (e) => {
+        const { name, value } = e.target;
+        setNewProperty(prev => ({ ...prev, [name]: value }));
+    };
+
+    const addProperty = () => {
+        fetch("http://127.0.0.1:5555/properties", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newProperty)
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to add property');
+                return response.json();
+            })
+            .then(data => {
+                fetchProperties(); // Refresh properties list
+                resetForm();
+            })
+            .catch(error => console.error("Error adding property:", error));
+    };
+
+    const editProperty = (property) => {
+        setIsEditing(true);
+        setCurrentProperty(property);
+        setNewProperty({
+            title: property.title,
+            description: property.description,
+            location: property.location,
+            price: property.price,
+            agent_id: property.agent_id,
+            image: property.image
+        });
+    };
+
+    const updateProperty = () => {
+        fetch(`http://127.0.0.1:5555/properties/${currentProperty.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newProperty)
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to update property');
+                return response.json();
+            })
+            .then(data => {
+                fetchProperties(); // Refresh properties list
+                resetForm();
+            })
+            .catch(error => console.error("Error updating property:", error));
+    };
+
+    const deleteProperty = (id) => {
+        fetch(`http://127.0.0.1:5555/properties/${id}`, {
+            method: 'DELETE'
+        })
+            .then(() => {
+                fetchProperties(); // Refresh properties list
+            })
+            .catch(error => console.error("Error deleting property:", error));
+    };
+
+    const resetForm = () => {
+        setIsEditing(false);
+        setNewProperty({ title: '', description: '', location: '', price: '', agent_id: '', image: '' });
+        setCurrentProperty(null);
+    };
+
     return (
-        <div style={{ padding: '20px' }}>
-            <div>
-                <NavBar />
+        <div className="properties-container">
+            <NavBar />
+            <h2 className="properties-title">Properties</h2>
+
+            <div className="search-container">
+                <h3>Search Properties</h3>
+                <div className="search-inputs">
+                    <input 
+                        type="text" 
+                        name="agent" 
+                        placeholder="Search by Agent" 
+                        value={searchParams.agent} 
+                        onChange={handleChange} 
+                        className="search-input" 
+                    />
+                    <input 
+                        type="text" 
+                        name="location" 
+                        placeholder="Search by Location" 
+                        value={searchParams.location} 
+                        onChange={handleChange} 
+                        className="search-input" 
+                    />
+                    <input 
+                        type="number" 
+                        name="minPrice" 
+                        placeholder="Min Price" 
+                        value={searchParams.minPrice} 
+                        onChange={handleChange} 
+                        className="search-input" 
+                    />
+                    <input 
+                        type="number" 
+                        name="maxPrice" 
+                        placeholder="Max Price" 
+                        value={searchParams.maxPrice} 
+                        onChange={handleChange} 
+                        className="search-input" 
+                    />
+                </div>
+                <button onClick={handleSearch} className="search-button">Search</button>
             </div>
-            <h2>Properties</h2>
-            <div>
+
+            <div className="property-form">
+                <h3>{isEditing ? 'Edit Property' : 'Add Property'}</h3>
                 <input 
                     type="text" 
-                    name="agent" 
-                    placeholder="Search by Agent" 
-                    value={searchParams.agent} 
-                    onChange={handleChange} 
+                    name="title" 
+                    placeholder="Title" 
+                    value={newProperty.title} 
+                    onChange={handleNewPropertyChange} 
+                    className="form-input" 
+                />
+                <input 
+                    type="text" 
+                    name="description" 
+                    placeholder="Description" 
+                    value={newProperty.description} 
+                    onChange={handleNewPropertyChange} 
+                    className="form-input" 
                 />
                 <input 
                     type="text" 
                     name="location" 
-                    placeholder="Search by Location" 
-                    value={searchParams.location} 
-                    onChange={handleChange} 
+                    placeholder="Location" 
+                    value={newProperty.location} 
+                    onChange={handleNewPropertyChange} 
+                    className="form-input" 
                 />
                 <input 
                     type="number" 
-                    name="minPrice" 
-                    placeholder="Min Price" 
-                    value={searchParams.minPrice} 
-                    onChange={handleChange} 
+                    name="price" 
+                    placeholder="Price" 
+                    value={newProperty.price} 
+                    onChange={handleNewPropertyChange} 
+                    className="form-input" 
                 />
                 <input 
-                    type="number" 
-                    name="maxPrice" 
-                    placeholder="Max Price" 
-                    value={searchParams.maxPrice} 
-                    onChange={handleChange} 
+                    type="text" 
+                    name="agent_id" 
+                    placeholder="Agent ID" 
+                    value={newProperty.agent_id} 
+                    onChange={handleNewPropertyChange} 
+                    className="form-input" 
                 />
-                <button onClick={handleSearch}>Search</button>
+                <input 
+                    type="text" 
+                    name="image" 
+                    placeholder="Image URL" 
+                    value={newProperty.image} 
+                    onChange={handleNewPropertyChange} 
+                    className="form-input" 
+                />
+                {isEditing ? (
+                    <button onClick={updateProperty} className="form-button">Update Property</button>
+                ) : (
+                    <button onClick={addProperty} className="form-button">Add Property</button>
+                )}
+                <button onClick={resetForm} className="form-button cancel-button">Cancel</button>
             </div>
-            <ul>
+
+            <h3 className="properties-list-title">Property Listings</h3>
+            <ul className="property-list">
                 {filteredProperties.map(property => (
-                    <PropertyCard key={property.id} property={property} />
+                    <li key={property.id} className="property-item">
+                        <PropertyCard property={property} />
+                        <img src={property.image} alt={property.title} className="property-image" />
+                        <div className="property-actions">
+                            <button onClick={() => editProperty(property)} className="action-button">Edit</button>
+                            <button onClick={() => deleteProperty(property.id)} className="action-button">Delete</button>
+                        </div>
+                    </li>
                 ))}
             </ul>
         </div>
