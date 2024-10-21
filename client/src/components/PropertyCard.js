@@ -7,7 +7,7 @@ function PropertyCard({ property }) {
 
     const handleBooking = () => {
         // Redirect to the buyer sign-up form
-        navigate('/Login');
+        navigate('/buyersignup');
     };
 
     return (

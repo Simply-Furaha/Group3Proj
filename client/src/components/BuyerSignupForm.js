@@ -80,7 +80,7 @@ function BuyerSignupForm() {
                 <div>
                     <label>Phone:</label>
                     <input
-                        type="text" // Use text to allow formatting
+                        type="text"
                         name="phone"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -105,6 +105,11 @@ function BuyerSignupForm() {
                 </div>
                 <button type="submit">Sign Up</button>
             </form>
+            <div style={{ marginTop: '10px', textAlign: 'center' }}>
+                <button onClick={() => navigate('/buyerLogin')} style={{ background: 'none', border: 'none', color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}>
+                    Already have an account? Log In
+                </button>
+            </div>
         </div>
     );
 }

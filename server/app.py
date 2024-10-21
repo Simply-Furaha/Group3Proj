@@ -297,19 +297,22 @@ def agentlogin():
     return jsonify({'error': 'Invalid email or password'}), 401
 
 
-
-@app.route('/buyerlogin', methods=['POST'])
-def buyerlogin():
+@app.route('/buyerLogin', methods=['POST'])
+def buyer_login():
     data = request.get_json()
-    buyer = Buyer.query.filter_by(email=data['email']).first()
-    if buyer and buyer.verify_password(data['password']):
-        return jsonify({
-            'id': buyer.id,
-            'name': buyer.name,
-            'email': buyer.email,
-            # Add other fields as necessary
-        }), 200
-    return jsonify({'error': 'Invalid email or password'}), 401
+    email = data.get('email')
+    password = data.get('password')
+
+    # Find the buyer by email
+    buyer = Buyer.query.filter_by(email=email).first()
+
+    if buyer and buyer.authenticate(password):
+        # Successful login
+        session['buyer_id'] = buyer.id  # Store buyer ID in session for authentication
+        return jsonify({"message": "Login successful", "buyer_id": buyer.id}), 200
+    else:
+        # Invalid credentials
+        return jsonify({"message": "Invalid email or password"}), 401
 
 
 if __name__ == '__main__':

@@ -5,6 +5,7 @@ import Properties from './Pages/Properties';
 import SignupForm from './components/signupForm';
 import LoginForm from './components/Login';
 import BuyerSignupForm from './components/BuyerSignupForm';
+import BuyerLogin from './components/BuyerLogin';
 import MyBookings from './Pages/Booking';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path='/properties' element={<Properties />} />
         <Route path='/buyersignup' element={<BuyerSignupForm />} />
+        <Route path='/buyerLogin' element={<BuyerLogin />} />
         <Route path='/booking' element={<MyBookings />} />
       </Routes>
     </Router>
