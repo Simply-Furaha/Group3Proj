@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
@@ -8,9 +8,7 @@ from models.agent import Agent
 from models.buyer import Buyer
 from models.property import Property
 from models.booking import Booking
-
 from datetime import datetime
-
 
 # Initialize CORS
 CORS(app)
@@ -83,7 +81,7 @@ def agentsbyId(id):
         db.session.commit()
         return {'message': 'Agent deleted successfully!'}
 
-####
+#####
 # Routes for Buyers
 
 @app.route('/buyers', methods=['GET', 'POST'])
@@ -157,7 +155,7 @@ def buyerbyId(id):
         db.session.commit()
         return {'message': 'Buyer deleted successfully!'}
 
-####
+#####
 @app.route('/properties', methods=['GET', 'POST'])
 def properties():
     if request.method == 'GET':
@@ -188,7 +186,7 @@ def properties():
             description=data['description'],
             location=data['location'],
             price=data['price'],
-            image=data.get('image_url')  # Use 'image_url' for consistency
+            image_url=data.get('image_url')  # Use 'image_url' for consistency
         )
         
         db.session.add(new_property)
@@ -236,7 +234,7 @@ def propertybyId(id):
         db.session.commit()
         return {'message': 'Property deleted successfully!'}
 
-##Booking Routes
+## Booking Routes
 
 @app.route('/bookings', methods=['GET', 'POST'])
 def manage_bookings():
@@ -247,7 +245,16 @@ def manage_bookings():
     if request.method == 'POST':
         data = request.get_json()
         
-        booking_date = datetime.strptime(data['booking_date'], '%Y-%m-%d').date()
+        # Validate the required fields
+        required_fields = ['buyer_id', 'property_id', 'booking_date']
+        if not all(field in data for field in required_fields):
+            return jsonify({"message": "Missing required fields"}), 400
+
+        # Parse booking_date and handle errors
+        try:
+            booking_date = datetime.strptime(data['booking_date'], '%Y-%m-%d').date()
+        except ValueError:
+            return jsonify({"message": "Invalid date format. Use YYYY-MM-DD."}), 400
 
         new_booking = Booking(
             buyer_id=data['buyer_id'],
@@ -274,7 +281,10 @@ def bookingsbyId(booking_id):
 
         data = request.get_json()
         if 'booking_date' in data:
-            booking.booking_date = datetime.strptime(data['booking_date'], '%Y-%m-%d').date()
+            try:
+                booking.booking_date = datetime.strptime(data['booking_date'], '%Y-%m-%d').date()
+            except ValueError:
+                return jsonify({'message': 'Invalid date format. Use YYYY-MM-DD.'}), 400
 
         db.session.commit()
         return {'message': 'Booking updated successfully!'}
