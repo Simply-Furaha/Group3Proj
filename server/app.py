@@ -236,11 +236,8 @@ def propertybyId(id):
 
 ## Booking Routes
 
-@app.route('/bookings', methods=['GET', 'POST'])
+@app.route('/bookings', methods=['POST','GET'])
 def manage_bookings():
-    if request.method == 'GET':
-        bookings = Booking.query.all()
-        return jsonify([booking.to_dict() for booking in bookings])
 
     if request.method == 'POST':
         data = request.get_json()
@@ -264,6 +261,10 @@ def manage_bookings():
         db.session.add(new_booking)
         db.session.commit()
         return jsonify(new_booking.to_dict()), 201
+
+    if request.method == 'GET':
+        bookings = Booking.query.all()
+        return jsonify([booking.to_dict() for booking in bookings])
 
 
 @app.route('/bookings/<int:booking_id>', methods=['GET', 'PATCH', 'DELETE'])

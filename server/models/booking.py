@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, Date, String, DateTime
+from sqlalchemy import Column, Integer, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy_serializer import SerializerMixin
 from config import db
@@ -16,14 +16,14 @@ class Booking(db.Model, SerializerMixin):
     property = relationship('Property', back_populates='bookings')
 
     def __repr__(self):
-        return f'<Booking ID {self.id}, Buyer ID {self.buyer_id}, Property ID {self.property_id}, Status {self.status}>'
+        return f'<Booking ID {self.id}, Buyer ID {self.buyer_id}, Property ID {self.property_id}>'
 
     def to_dict(self):
         return {
             'id': self.id,
             'buyer_id': self.buyer_id,
             'property_id': self.property_id,
-            'booking_date': self.booking_date,
+            'booking_date': str(self.booking_date),  # Convert date to string for JSON serialization
             'buyer': self.buyer.to_dict() if self.buyer else None,
             'property': self.property.to_dict() if self.property else None,
         }

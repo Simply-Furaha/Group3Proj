@@ -36,7 +36,7 @@ function MyBookings({ buyerId }) {
 
         console.log('Creating booking:', bookingData); // Log the data being sent
 
-        fetch(`http://127.0.0.1:5555/bookings`, {
+        fetch(`http://127.0.0.1:5555/bookings${propertyId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

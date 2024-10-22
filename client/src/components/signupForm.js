@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { useNavigate } from 'react-router-dom';
-import NavBar from './NavBar';
+import { useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
+import './SignupForm.css';
+import NavBar from './NavBar'
 
 function SignupForm() {
     const [agents, setAgents] = useState([]);
     const navigate = useNavigate();
+    const location = useLocation(); // Get current location
 
     // Validation schema
     const formSchema = yup.object().shape({
@@ -46,7 +48,7 @@ function SignupForm() {
                 .then(data => {
                     setAgents([...agents, values]);  // Update agents state
                     alert('User registered successfully');
-                    navigate('/myaccount');
+                    navigate('/login');
                 })
                 .catch(error => {
                     console.error(error);
@@ -56,8 +58,13 @@ function SignupForm() {
     });
 
     return (
-        <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px', border: '1px solid #ccc', borderRadius: '5px' }}>
-            <NavBar />
+        <div className="signup-container">
+            {/* Conditionally render NavBar */}
+            {location.pathname !== '/signup' && (
+                <div className="nav">
+                    <NavBar />
+                </div>
+            )}
             <h2>Sign Up</h2>
             <form onSubmit={formik.handleSubmit}>
                 <div>
@@ -70,7 +77,7 @@ function SignupForm() {
                         value={formik.values.username}
                     />
                     {formik.touched.username && formik.errors.username ? (
-                        <div style={{ color: 'red' }}>{formik.errors.username}</div>
+                        <div className="error-message">{formik.errors.username}</div>
                     ) : null}
                 </div>
                 <div>
@@ -83,20 +90,20 @@ function SignupForm() {
                         value={formik.values.email}
                     />
                     {formik.touched.email && formik.errors.email ? (
-                        <div style={{ color: 'red' }}>{formik.errors.email}</div>
+                        <div className="error-message">{formik.errors.email}</div>
                     ) : null}
                 </div>
                 <div>
                     <label>Phone:</label>
                     <input
-                        type="text" // Changed to text to allow leading zeros
+                        type="text"
                         name="phone"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.phone}
                     />
                     {formik.touched.phone && formik.errors.phone ? (
-                        <div style={{ color: 'red' }}>{formik.errors.phone}</div>
+                        <div className="error-message">{formik.errors.phone}</div>
                     ) : null}
                 </div>
                 <div>
@@ -109,7 +116,7 @@ function SignupForm() {
                         value={formik.values.password}
                     />
                     {formik.touched.password && formik.errors.password ? (
-                        <div style={{ color: 'red' }}>{formik.errors.password}</div>
+                        <div className="error-message">{formik.errors.password}</div>
                     ) : null}
                 </div>
                 <button type="submit">Sign Up</button>

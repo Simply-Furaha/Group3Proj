@@ -1,166 +1,144 @@
-/* Properties.css */
-
-/* Container for the entire properties page */
 .properties-container {
     padding: 20px;
-    background-color: #f4f4f9;
-    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
 }
 
-/* Title for the properties section */
 .properties-title {
-    text-align: center;
-    font-size: 2rem;
-    color: #333;
+    font-size: 2.5rem;
     margin-bottom: 20px;
+    text-align: center;
+    color: #343a40;
+    font-weight: bold;
 }
 
-/* Container for the search functionality */
 .search-container {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    margin: 20px 0;
+    text-align: center;
 }
 
 .search-inputs {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
-    gap: 15px;
 }
 
 .search-input {
-    flex: 1;
+    margin: 5px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    width: 200px;
+    transition: border-color 0.3s;
+}
+
+.search-input:focus {
+    border-color: #007bff;
+    outline: none;
 }
 
 .search-button {
     padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
     border: none;
     border-radius: 5px;
+    background-color: #007bff;
+    color: white;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    margin-top: 10px;
+    transition: background-color 0.3s;
 }
 
 .search-button:hover {
     background-color: #0056b3;
 }
 
-/* Property form for adding/editing properties */
 .property-form {
-    background-color: #fff;
+    margin: 20px 0;
     padding: 20px;
-    border-radius: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
 }
 
 .form-input {
-    width: 100%;
+    width: calc(100% - 20px);
+    margin: 10px 0;
     padding: 10px;
-    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    transition: border-color 0.3s;
+}
+
+.form-input:focus {
+    border-color: #007bff;
+    outline: none;
 }
 
 .form-button {
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
+    padding: 10px 15px;
+    margin: 10px 5px;
     border: none;
     border-radius: 5px;
+    background-color: #28a745;
+    color: white;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-right: 10px;
+    transition: background-color 0.3s;
 }
 
 .form-button:hover {
     background-color: #218838;
 }
 
-.cancel-button {
-    background-color: #dc3545;
-}
-
-.cancel-button:hover {
-    background-color: #c82333;
-}
-
-/* Title for the property listings */
-.properties-list-title {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-}
-
-/* Property list styling */
-.property-list {
-    display: flex;
-    flex-wrap: wrap;
+.property-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
-    list-style-type: none;
-    padding: 0;
 }
 
-/* Individual property card */
 .property-item {
-    background-color: #fff;
-    width: calc(33.333% - 20px);
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.property-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .property-image {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 5px;
-    margin-bottom: 10px;
+    height: 200px; /* Adjust this height as needed */
+    object-fit: cover; /* Ensures the image fits within the specified dimensions */
 }
 
-/* Action buttons for each property */
 .property-actions {
-    margin-top: auto;
-    display: flex;
-    gap: 10px;
+    text-align: center;
+    padding: 10px;
 }
 
 .action-button {
-    padding: 5px 15px;
-    background-color: #007bff;
-    color: white;
+    padding: 5px 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    background-color: #007bff;
+    color: white;
+    margin: 5px;
+    transition: background-color 0.3s;
 }
 
 .action-button:hover {
     background-color: #0056b3;
 }
 
-/* Media query for responsive design */
-@media (max-width: 768px) {
-    .property-item {
-        width: calc(50% - 20px);
-    }
+.delete-button {
+    background-color: #dc3545;
 }
 
-@media (max-width: 480px) {
-    .property-item {
-        width: 100%;
-    }
-
-    .search-inputs {
-        flex-direction: column;
-    }
+.delete-button:hover {
+    background-color: #c82333;
 }

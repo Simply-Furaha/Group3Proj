@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import PropertyCard from '../components/PropertyCard';
 import NavBar from '../components/NavBar';
-import './Properties.css'; 
+import './Properties.css';
 
 function Properties() {
     const [properties, setProperties] = useState([]);
@@ -14,13 +16,6 @@ function Properties() {
     });
     const [isEditing, setIsEditing] = useState(false);
     const [currentProperty, setCurrentProperty] = useState(null);
-    const [newProperty, setNewProperty] = useState({
-        title: '',
-        description: '',
-        location: '',
-        price: '',
-        agent_id: ''
-    });
 
     useEffect(() => {
         fetchProperties();
@@ -49,64 +44,39 @@ function Properties() {
         setFilteredProperties(filtered);
     };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setSearchParams(prev => ({ ...prev, [name]: value }));
-    };
+    const handleNewPropertySubmit = (values, { resetForm }) => {
+        const method = isEditing ? 'PATCH' : 'POST';
+        const url = isEditing
+            ? `http://127.0.0.1:5555/properties/${currentProperty.id}`
+            : 'http://127.0.0.1:5555/properties';
 
-    const handleNewPropertyChange = (e) => {
-        const { name, value } = e.target;
-        setNewProperty(prev => ({ ...prev, [name]: value }));
-    };
-
-    const addProperty = () => {
-        fetch("http://127.0.0.1:5555/properties", {
-            method: 'POST',
+        fetch(url, {
+            method,
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(newProperty)
+            body: JSON.stringify(values)
         })
             .then(response => {
-                if (!response.ok) throw new Error('Failed to add property');
+                if (!response.ok) throw new Error('Failed to save property');
                 return response.json();
             })
             .then(data => {
                 fetchProperties(); // Refresh properties list
                 resetForm();
+                resetFormState();
             })
-            .catch(error => console.error("Error adding property:", error));
+            .catch(error => console.error("Error saving property:", error));
     };
 
     const editProperty = (property) => {
         setIsEditing(true);
         setCurrentProperty(property);
-        setNewProperty({
-            title: property.title,
-            description: property.description,
-            location: property.location,
-            price: property.price,
-            agent_id: property.agent_id,
-        });
     };
 
-    const updateProperty = () => {
-        fetch(`http://127.0.0.1:5555/properties/${currentProperty.id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newProperty)
-        })
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to update property');
-                return response.json();
-            })
-            .then(data => {
-                fetchProperties(); // Refresh properties list
-                resetForm();
-            })
-            .catch(error => console.error("Error updating property:", error));
+    const resetFormState = () => {
+        setIsEditing(false);
+        setCurrentProperty(null);
     };
 
     const deleteProperty = (id) => {
@@ -119,51 +89,54 @@ function Properties() {
             .catch(error => console.error("Error deleting property:", error));
     };
 
-    const resetForm = () => {
-        setIsEditing(false);
-        setNewProperty({ title: '', description: '', location: '', price: '', agent_id: ''});
-        setCurrentProperty(null);
-    };
+    const PropertySchema = Yup.object().shape({
+        title: Yup.string().required('Title is required'),
+        description: Yup.string().required('Description is required'),
+        location: Yup.string().required('Location is required'),
+        price: Yup.number().required('Price is required').positive('Price must be positive'),
+        agent_id: Yup.string().required('Agent ID is required'),
+        image_url: Yup.string().url('Must be a valid URL')
+    });
 
     return (
         <div className="properties-container">
             <NavBar />
-            <h2 className="properties-title">Properties</h2>
+            <h2 className="properties-title">Explore Properties</h2>
 
             <div className="search-container">
                 <h3>Search Properties</h3>
                 <div className="search-inputs">
-                    <input 
-                        type="text" 
-                        name="agent" 
-                        placeholder="Search by Agent" 
-                        value={searchParams.agent} 
-                        onChange={handleChange} 
-                        className="search-input" 
+                    <input
+                        type="text"
+                        name="agent"
+                        placeholder="Search by Agent"
+                        value={searchParams.agent}
+                        onChange={e => setSearchParams({ ...searchParams, agent: e.target.value })}
+                        className="search-input"
                     />
-                    <input 
-                        type="text" 
-                        name="location" 
-                        placeholder="Search by Location" 
-                        value={searchParams.location} 
-                        onChange={handleChange} 
-                        className="search-input" 
+                    <input
+                        type="text"
+                        name="location"
+                        placeholder="Search by Location"
+                        value={searchParams.location}
+                        onChange={e => setSearchParams({ ...searchParams, location: e.target.value })}
+                        className="search-input"
                     />
-                    <input 
-                        type="number" 
-                        name="minPrice" 
-                        placeholder="Min Price" 
-                        value={searchParams.minPrice} 
-                        onChange={handleChange} 
-                        className="search-input" 
+                    <input
+                        type="number"
+                        name="minPrice"
+                        placeholder="Min Price"
+                        value={searchParams.minPrice}
+                        onChange={e => setSearchParams({ ...searchParams, minPrice: e.target.value })}
+                        className="search-input"
                     />
-                    <input 
-                        type="number" 
-                        name="maxPrice" 
-                        placeholder="Max Price" 
-                        value={searchParams.maxPrice} 
-                        onChange={handleChange} 
-                        className="search-input" 
+                    <input
+                        type="number"
+                        name="maxPrice"
+                        placeholder="Max Price"
+                        value={searchParams.maxPrice}
+                        onChange={e => setSearchParams({ ...searchParams, maxPrice: e.target.value })}
+                        className="search-input"
                     />
                 </div>
                 <button onClick={handleSearch} className="search-button">Search</button>
@@ -171,67 +144,54 @@ function Properties() {
 
             <div className="property-form">
                 <h3>{isEditing ? 'Edit Property' : 'Add Property'}</h3>
-                <input 
-                    type="text" 
-                    name="title" 
-                    placeholder="Title" 
-                    value={newProperty.title} 
-                    onChange={handleNewPropertyChange} 
-                    className="form-input" 
-                />
-                <input 
-                    type="text" 
-                    name="description" 
-                    placeholder="Description" 
-                    value={newProperty.description} 
-                    onChange={handleNewPropertyChange} 
-                    className="form-input" 
-                />
-                <input 
-                    type="text" 
-                    name="location" 
-                    placeholder="Location" 
-                    value={newProperty.location} 
-                    onChange={handleNewPropertyChange} 
-                    className="form-input" 
-                />
-                <input 
-                    type="number" 
-                    name="price" 
-                    placeholder="Price" 
-                    value={newProperty.price} 
-                    onChange={handleNewPropertyChange} 
-                    className="form-input" 
-                />
-                <input 
-                    type="text" 
-                    name="agent_id" 
-                    placeholder="Agent ID" 
-                    value={newProperty.agent_id} 
-                    onChange={handleNewPropertyChange} 
-                    className="form-input" 
-                />
-              
-                {isEditing ? (
-                    <button onClick={updateProperty} className="form-button">Update Property</button>
-                ) : (
-                    <button onClick={addProperty} className="form-button">Add Property</button>
-                )}
-                <button onClick={resetForm} className="form-button cancel-button">Cancel</button>
+                <Formik
+                    initialValues={{
+                        title: currentProperty ? currentProperty.title : '',
+                        description: currentProperty ? currentProperty.description : '',
+                        location: currentProperty ? currentProperty.location : '',
+                        price: currentProperty ? currentProperty.price : '',
+                        agent_id: currentProperty ? currentProperty.agent_id : '',
+                        image_url: currentProperty ? currentProperty.image_url : '' // Add the image URL field
+                    }}
+                    validationSchema={PropertySchema}
+                    onSubmit={handleNewPropertySubmit}
+                >
+                    {({ isSubmitting }) => (
+                        <Form className="form">
+                            <Field type="text" name="title" placeholder="Title" className="form-input" />
+                            <ErrorMessage name="title" component="div" className="error" />
+                            <Field type="text" name="description" placeholder="Description" className="form-input" />
+                            <ErrorMessage name="description" component="div" className="error" />
+                            <Field type="text" name="location" placeholder="Location" className="form-input" />
+                            <ErrorMessage name="location" component="div" className="error" />
+                            <Field type="number" name="price" placeholder="Price" className="form-input" />
+                            <ErrorMessage name="price" component="div" className="error" />
+                            <Field type="text" name="agent_id" placeholder="Agent ID" className="form-input" />
+                            <ErrorMessage name="agent_id" component="div" className="error" />
+                            {/* Field for the Image URL */}
+                            <Field type="text" name="image_url" placeholder="Image URL" className="form-input" />
+                            <ErrorMessage name="image_url" component="div" className="error" />
+                            <button type="submit" className="form-button" disabled={isSubmitting}>
+                                {isEditing ? 'Update Property' : 'Add Property'}
+                            </button>
+                            <button type="button" className="form-button cancel-button" onClick={resetFormState}>Cancel</button>
+                        </Form>
+                    )}
+                </Formik>
             </div>
 
             <h3 className="properties-list-title">Property Listings</h3>
-            <ul className="property-list">
+            <div className="property-grid">
                 {filteredProperties.map(property => (
-                    <li key={property.id} className="property-item">
+                    <div key={property.id} className="property-item">
                         <PropertyCard property={property} />
                         <div className="property-actions">
                             <button onClick={() => editProperty(property)} className="action-button">Edit</button>
-                            <button onClick={() => deleteProperty(property.id)} className="action-button">Delete</button>
+                            <button onClick={() => deleteProperty(property.id)} className="action-button delete-button">Delete</button>
                         </div>
-                    </li>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 }

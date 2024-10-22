@@ -6,14 +6,13 @@ function BookingForm({ buyerId, propertyId, agentId, setBookings }) {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        fetch('http://127.0.0.1:5555/bookings', {
+        fetch(`http://127.0.0.1:5555/bookings${propertyId}`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
                 booking_date: bookingDate,
-                buyer_id: buyerId,
                 property_id: propertyId,
                 agent_id: agentId, // Include the agent ID if needed
             }),

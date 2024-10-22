@@ -31,7 +31,7 @@ function LoginForm() {
                 .then((r) => r.json())
                 .then(data => {
                     // Assuming the server returns a token or success response
-                    navigate('../Booking'); // Redirect to the agent dashboard
+                    navigate('../agents'); // Redirect to the agent dashboard
                 })
                 .catch(error => {
                     console.error(error);
