@@ -3,7 +3,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import PropertyCard from '../components/PropertyCard';
 import NavBar from '../components/NavBar';
-import './Properties.css';
+import './Properties.css'
+import { faker } from '@faker-js/faker'
 
 function Properties() {
     const [properties, setProperties] = useState([]);
@@ -18,8 +19,42 @@ function Properties() {
     const [currentProperty, setCurrentProperty] = useState(null);
 
     useEffect(() => {
+        generateRandomData(20);
         fetchProperties();
     }, []);
+
+
+async function generateRandomData(numProperties) {
+    const randomData = [];
+
+    for (let i = 0; i < numProperties; i++) {
+        const property = {
+            title: faker.lorem.words(3),
+            description: faker.lorem.sentences(2),
+            location: faker.address.city(),
+            price: faker.commerce.price(50000, 5000000),
+            agent_id: faker.datatype.uuid(),
+            image_url: faker.image.city() // Generates a random image URL
+        };
+        randomData.push(property);
+    }
+
+    // Send random data to the server
+    try {
+        const response = await fetch('https://group3proj.onrender.com/properties', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(randomData)
+        });
+        if (!response.ok) throw new Error('Failed to save random properties');
+        console.log('Random properties saved successfully!');
+    } catch (error) {
+        console.error('Error generating random data:', error);
+    }
+}
+
 
     const fetchProperties = () => {
         fetch("https://group3proj.onrender.com/properties")
