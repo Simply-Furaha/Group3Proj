@@ -34,7 +34,7 @@ function Properties() {
                 location: faker.location.city(), // Updated from faker.address.city() to faker.location.city()
                 price: faker.commerce.price(50000, 5000000),
                 agent_id: faker.string.uuid(), // Updated from faker.datatype.uuid() to faker.string.uuid()
-                image_url: faker.image.city() // Generates a random image URL
+                image_url: faker.image.url() // Updated from faker.image.imageUrl() to faker.image.imageUrl()
             };
             randomData.push(property);
         }
