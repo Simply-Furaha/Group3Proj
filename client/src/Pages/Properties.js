@@ -22,7 +22,7 @@ function Properties() {
     }, []);
 
     const fetchProperties = () => {
-        fetch("http://127.0.0.1:5555/properties")
+        fetch("https://group3proj.onrender.com/properties")
             .then(response => response.json())
             .then(data => {
                 setProperties(data);
@@ -47,8 +47,8 @@ function Properties() {
     const handleNewPropertySubmit = (values, { resetForm }) => {
         const method = isEditing ? 'PATCH' : 'POST';
         const url = isEditing
-            ? `http://127.0.0.1:5555/properties/${currentProperty.id}`
-            : 'http://127.0.0.1:5555/properties';
+            ? `https://group3proj.onrender.com/properties/${currentProperty.id}`
+            : 'https://group3proj.onrender.com/properties';
 
         fetch(url, {
             method,
@@ -80,7 +80,7 @@ function Properties() {
     };
 
     const deleteProperty = (id) => {
-        fetch(`http://127.0.0.1:5555/properties/${id}`, {
+        fetch(`https://group3proj.onrender.com/properties/${id}`, {
             method: 'DELETE'
         })
             .then(() => {

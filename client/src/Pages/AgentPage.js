@@ -7,7 +7,7 @@ function AgentPage() {
     const [agents, setAgents] = useState([]);
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5555/agents")
+        fetch("https://group3proj.onrender.com/agents")
             .then((r) => r.json())
             .then(data => setAgents(data))
             .catch(error => console.error('Error fetching agents:', error));

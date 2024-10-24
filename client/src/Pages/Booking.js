@@ -6,14 +6,14 @@ function MyBookings({ buyerId }) {
     const [selectedBooking, setSelectedBooking] = useState(null);
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:5555/bookings`)
+        fetch(`https://group3proj.onrender.com/bookings`)
             .then(response => response.json())
             .then(data => setBookings(data.filter(booking => booking.buyer_id === buyerId)))
             .catch(error => console.error('Error fetching bookings:', error));
     }, [buyerId]);
 
     const handleDelete = (bookingId) => {
-        fetch(`http://127.0.0.1:5555/bookings/${bookingId}`, {
+        fetch(`https://group3proj.onrender.com/bookings/${bookingId}`, {
             method: 'DELETE',
         })
             .then(response => {
@@ -36,7 +36,7 @@ function MyBookings({ buyerId }) {
 
         console.log('Creating booking:', bookingData); // Log the data being sent
 
-        fetch(`http://127.0.0.1:5555/bookings${propertyId}`, {
+        fetch(`https://group3proj.onrender.com/bookings${propertyId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

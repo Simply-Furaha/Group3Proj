@@ -6,7 +6,7 @@ function BookingForm({ buyerId, propertyId, agentId, setBookings }) {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        fetch(`http://127.0.0.1:5555/bookings${propertyId}`, {
+        fetch(`https://group3proj.onrender.com/bookings${propertyId}`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",

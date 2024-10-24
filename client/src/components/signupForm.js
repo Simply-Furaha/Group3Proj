@@ -28,7 +28,7 @@ function SignupForm() {
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
-            fetch("http://127.0.0.1:5555/agents", {
+            fetch("https://group3proj.onrender.com/agents", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

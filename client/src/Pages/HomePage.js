@@ -9,7 +9,7 @@ function HomePage() {
 
     useEffect(() => {
         // Fetch all properties from the database
-        fetch("http://127.0.0.1:5555/properties")
+        fetch("https://group3proj.onrender.com/properties")
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch properties");

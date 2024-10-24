@@ -21,7 +21,7 @@ function BuyerLogin() {
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
-            fetch("http://127.0.0.1:5555/buyerLogin", {
+            fetch("https://group3proj.onrender.com/buyerLogin", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
